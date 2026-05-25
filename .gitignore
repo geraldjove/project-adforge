@@ -11,3 +11,4 @@ dist
 *.local
 *.tsbuildinfo
 vite.config.ts.timestamp-*
+.npm-cache/
