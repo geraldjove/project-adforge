@@ -12,3 +12,6 @@ dist
 *.tsbuildinfo
 vite.config.ts.timestamp-*
 .npm-cache/
+.pkg-react-router-*/
+*.tgz
+dev-server*.log
