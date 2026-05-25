@@ -11,11 +11,11 @@ interface StatCardProps {
 export function StatCard({ label, value, icon: Icon, hint }: StatCardProps) {
   return (
     <Card>
-      <CardContent className="flex items-center gap-4 p-5">
+      <CardContent className="flex items-center gap-3 p-4 sm:gap-4 sm:p-5">
         <div className="flex size-11 items-center justify-center rounded-lg bg-accent text-accent-foreground">
           <Icon className="size-5" />
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-2xl font-bold leading-none">{value}</p>
           <p className="mt-1 text-sm text-muted-foreground">{label}</p>
           {hint && <p className="text-xs text-muted-foreground/70">{hint}</p>}

@@ -14,8 +14,8 @@ function RevisionCard({ r }: { r: Revision }) {
   return (
     <Card>
       <CardContent className="p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <p className="font-semibold">{r.asset}</p>
             <p className="text-xs text-muted-foreground">
               {r.conceptTitle} · {r.reviewer} · Round {r.round} · {formatDate(r.updatedAt)}

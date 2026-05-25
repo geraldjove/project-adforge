@@ -30,7 +30,9 @@ function Tabs({ value, defaultValue, onValueChange, className, children }: TabsP
 }
 
 const TabsList = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={cn("inline-flex items-center gap-1 rounded-lg bg-muted p-1", className)}>{children}</div>
+  <div className={cn("flex w-full flex-wrap items-center gap-1 rounded-lg bg-muted p-1 sm:inline-flex sm:w-auto", className)}>
+    {children}
+  </div>
 );
 
 function TabsTrigger({ value, className, children }: { value: string; className?: string; children: React.ReactNode }) {
@@ -41,7 +43,7 @@ function TabsTrigger({ value, className, children }: { value: string; className?
       type="button"
       onClick={() => ctx.setValue(value)}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+        "inline-flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all sm:flex-none",
         active ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
         className
       )}

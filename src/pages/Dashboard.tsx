@@ -44,8 +44,8 @@ export default function Dashboard() {
       </div>
 
       <Card className="mt-6">
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <div>
+        <CardHeader className="gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <CardTitle className="text-base">{currentProject.name}</CardTitle>
             <p className="mt-1 text-sm text-muted-foreground">{currentProject.objective}</p>
           </div>
@@ -61,14 +61,14 @@ export default function Dashboard() {
           </div>
           <WorkflowProgress stages={workflowStages} />
           {nextStage && (
-            <div className="flex items-center justify-between rounded-lg bg-accent px-4 py-3">
+            <div className="flex flex-col gap-3 rounded-lg bg-accent px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2 text-sm text-accent-foreground">
                 <Clock className="size-4" />
                 <span>
                   Next up: <span className="font-semibold">{nextStage.label}</span>
                 </span>
               </div>
-              <Button size="sm" variant="outline" asChild>
+              <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link to="/inspiration">
                   Continue <ArrowRight className="size-4" />
                 </Link>
@@ -85,8 +85,8 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="space-y-3">
             {pendingReviews.map((r) => (
-              <div key={r.id} className="flex items-center justify-between rounded-lg border p-3">
-                <div>
+              <div key={r.id} className="flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
                   <p className="text-sm font-medium">{r.asset}</p>
                   <p className="text-xs text-muted-foreground">{r.reviewer} · Round {r.round}</p>
                 </div>
@@ -108,7 +108,7 @@ export default function Dashboard() {
           <CardContent className="space-y-3">
             {projects.map((p) => (
               <div key={p.id} className="rounded-lg border p-3">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm font-medium">{p.name}</p>
                   <Badge
                     variant={p.status === "Active" ? "success" : p.status === "Draft" ? "secondary" : "outline"}

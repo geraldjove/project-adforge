@@ -47,7 +47,7 @@ export default function ImagePrompts() {
                   ))}
                 </Select>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label>Model</Label>
                   <Select>
@@ -85,8 +85,8 @@ export default function ImagePrompts() {
         <div className="space-y-5 lg:col-span-2">
           {imagePrompts.map((p) => (
             <Card key={p.id}>
-              <CardHeader className="flex-row items-start justify-between space-y-0">
-                <div>
+              <CardHeader className="gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <CardTitle className="text-base">{p.conceptTitle}</CardTitle>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <Badge variant={p.withProduct ? "accent" : "secondary"} className="gap-1">
@@ -101,7 +101,7 @@ export default function ImagePrompts() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="rounded-lg bg-muted/50 p-3">
-                  <div className="mb-1.5 flex items-center justify-between">
+                  <div className="mb-1.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Prompt</span>
                     <CopyButton text={p.prompt} />
                   </div>

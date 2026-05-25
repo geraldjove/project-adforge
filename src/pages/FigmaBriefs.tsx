@@ -24,8 +24,8 @@ export default function FigmaBriefs() {
       <div className="space-y-6">
         {figmaBriefs.map((b) => (
           <Card key={b.id}>
-            <CardHeader className="flex-row items-start justify-between space-y-0">
-              <div>
+            <CardHeader className="gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <div className="mb-1.5 flex items-center gap-2">
                   <PenTool className="size-4 text-primary" />
                   <CardTitle className="text-base">{b.conceptTitle}</CardTitle>
@@ -44,8 +44,8 @@ export default function FigmaBriefs() {
                   </p>
                   <div className="space-y-2">
                     {b.copyBlocks.map((cb) => (
-                      <div key={cb.label} className="flex gap-3 rounded-lg border p-3">
-                        <span className="w-20 shrink-0 text-xs font-medium text-muted-foreground">{cb.label}</span>
+                      <div key={cb.label} className="flex flex-col gap-1 rounded-lg border p-3 sm:flex-row sm:gap-3">
+                        <span className="shrink-0 text-xs font-medium text-muted-foreground sm:w-20">{cb.label}</span>
                         <span className="text-sm">{cb.value}</span>
                       </div>
                     ))}

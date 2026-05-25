@@ -3,10 +3,15 @@ import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navItems } from "./nav";
 
-export function Sidebar() {
+interface SidebarProps {
+  className?: string;
+  onNavigate?: () => void;
+}
+
+export function Sidebar({ className, onNavigate }: SidebarProps) {
   const groups = ["Overview", "Creative Pipeline"] as const;
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
+    <aside className={cn("flex h-full w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground", className)}>
       <div className="flex items-center gap-2.5 px-5 py-5">
         <div className="flex size-9 items-center justify-center rounded-lg bg-sidebar-accent text-white">
           <Sparkles className="size-5" />
@@ -31,6 +36,7 @@ export function Sidebar() {
                     key={item.to}
                     to={item.to}
                     end={item.to === "/"}
+                    onClick={onNavigate}
                     className={({ isActive }) =>
                       cn(
                         "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
