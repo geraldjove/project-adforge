@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 20% 99%;
+    --foreground: 240 10% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 12%;
+
+    --primary: 256 70% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 10% 96%;
+    --secondary-foreground: 240 10% 20%;
+
+    --muted: 240 10% 96%;
+    --muted-foreground: 240 5% 45%;
+
+    --accent: 256 60% 96%;
+    --accent-foreground: 256 70% 40%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 56% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 60% 15%;
+
+    --border: 240 12% 90%;
+    --input: 240 12% 90%;
+    --ring: 256 70% 56%;
+
+    --sidebar: 252 30% 13%;
+    --sidebar-foreground: 250 20% 86%;
+    --sidebar-accent: 256 70% 60%;
+    --sidebar-border: 252 20% 22%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/40;
+  }
+}
