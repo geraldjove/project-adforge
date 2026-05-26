@@ -1,6 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Select } from "@/components/ui/select";
+import { clientAccounts } from "@/data/mockData";
 import { navItems } from "./nav";
 
 interface SidebarProps {
@@ -9,7 +11,25 @@ interface SidebarProps {
 }
 
 export function Sidebar({ className, onNavigate }: SidebarProps) {
-  const groups = ["Overview", "Creative Pipeline"] as const;
+  const groups = ["Overview", "Client Project Dashboard"] as const;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { clientId } = useParams();
+  const [searchParams] = useSearchParams();
+  const currentPath = `${location.pathname}${location.hash}`;
+  const activeClientId = clientId ?? searchParams.get("client") ?? clientAccounts[0].id;
+  const activeClient = clientAccounts.find((client) => client.id === activeClientId) ?? clientAccounts[0];
+
+  function handleClientChange(nextClientId: string) {
+    if (location.pathname === "/concepts") {
+      navigate(`/concepts?client=${nextClientId}`);
+    } else {
+      const section = location.pathname.startsWith("/clients/") ? location.hash : "";
+      navigate(`/clients/${nextClientId}${section}`);
+    }
+    onNavigate?.();
+  }
+
   return (
     <aside className={cn("flex h-full w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground", className)}>
       <div className="flex items-center gap-2.5 px-5 py-5">
@@ -18,7 +38,7 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
         </div>
         <div className="leading-tight">
           <div className="text-sm font-bold text-white">AdForge</div>
-          <div className="text-xs text-sidebar-foreground/60">Creative Pipeline</div>
+          <div className="text-xs text-sidebar-foreground/60">Client Projects</div>
         </div>
       </div>
 
@@ -31,30 +51,41 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
             <div className="space-y-0.5">
               {navItems
                 .filter((i) => i.group === group)
-                .map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === "/"}
-                    onClick={onNavigate}
-                    className={({ isActive }) =>
-                      cn(
+                .map((item) => {
+                  const itemTo = item.to.replace("/clients/client-001", `/clients/${activeClient.id}`);
+                  const clientItemTo = itemTo.replace("client=client-001", `client=${activeClient.id}`);
+                  const isOverviewSection =
+                    clientItemTo.endsWith("#overview") &&
+                    location.pathname === clientItemTo.split("#")[0] &&
+                    location.hash === "";
+                  const isGenerator = clientItemTo.startsWith("/concepts") && location.pathname === "/concepts";
+                  const isActive =
+                    clientItemTo === "/"
+                      ? location.pathname === "/"
+                      : currentPath === clientItemTo || isOverviewSection || isGenerator;
+
+                  return (
+                    <Link
+                      key={item.to}
+                      to={clientItemTo}
+                      onClick={onNavigate}
+                      className={cn(
                         "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                         isActive
                           ? "bg-sidebar-accent text-white"
                           : "text-sidebar-foreground/80 hover:bg-white/5 hover:text-white"
-                      )
-                    }
-                  >
-                    {item.step && (
-                      <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-white/10 text-[10px] font-semibold">
-                        {item.step}
-                      </span>
-                    )}
-                    <item.icon className={cn("size-4 shrink-0", item.step && "hidden")} />
-                    <span className="truncate">{item.label}</span>
-                  </NavLink>
-                ))}
+                      )}
+                    >
+                      {item.step && (
+                        <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-white/10 text-[10px] font-semibold">
+                          {item.step}
+                        </span>
+                      )}
+                      <item.icon className={cn("size-4 shrink-0", item.step && "hidden")} />
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
         ))}
@@ -62,8 +93,23 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
 
       <div className="border-t border-sidebar-border p-4">
         <div className="rounded-lg bg-white/5 p-3">
-          <p className="text-xs font-medium text-white">Acme Hydration</p>
-          <p className="text-[11px] text-sidebar-foreground/60">Spring Launch · Active project</p>
+          <label className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
+            Active client
+          </label>
+          <Select
+            value={activeClient.id}
+            onChange={(event) => handleClientChange(event.target.value)}
+            className="h-9 border-white/10 bg-white pr-8 text-xs font-medium text-foreground shadow-none focus-visible:ring-sidebar-accent"
+          >
+            {clientAccounts.map((client) => (
+              <option key={client.id} value={client.id}>
+                {client.clientName}
+              </option>
+            ))}
+          </Select>
+          <p className="mt-2 text-[11px] text-sidebar-foreground/60">
+            {activeClient.projectStatus} · {activeClient.subscriptionTier}
+          </p>
         </div>
       </div>
     </aside>

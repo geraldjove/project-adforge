@@ -1,127 +1,217 @@
 import { Link } from "react-router-dom";
-import { Lightbulb, Images, CheckSquare, Layers, ArrowRight, Clock } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  CircleDollarSign,
+  ExternalLink,
+  FolderOpen,
+  LayoutDashboard,
+  PackageCheck,
+  PauseCircle,
+  UsersRound,
+} from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatCard } from "@/components/shared/StatCard";
-import { WorkflowProgress } from "@/components/shared/WorkflowProgress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { StatusBadge } from "@/components/shared/StatusBadge";
-import { cn } from "@/lib/utils";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import {
-  concepts,
-  currentProject,
-  inspiration,
-  projects,
-  revisions,
-  workflowStages,
+  clientAccounts,
+  adsOrderOptions,
+  subscriptionTierOptions,
+  type ClientAccount,
+  type ClientProjectStatus,
+  type PaymentStatus,
 } from "@/data/mockData";
 
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+function paymentVariant(status: PaymentStatus) {
+  if (status === "Paid" || status === "On-going") return "success";
+  if (status === "Not Paid") return "warning";
+  return "destructive";
+}
+
+function projectVariant(status: ClientProjectStatus) {
+  if (status === "Completed") return "success";
+  if (status === "Under Review") return "warning";
+  if (status === "Cancelled" || status === "Frozen") return "destructive";
+  return "accent";
+}
+
+function ClientIdentity({ client }: { client: ClientAccount }) {
+  return (
+    <div className="min-w-0">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="font-semibold">{client.clientName}</p>
+        <Badge variant="outline">{client.product}</Badge>
+      </div>
+      <div className="mt-1 grid gap-1 text-xs text-muted-foreground">
+        <span>{client.contactPerson}</span>
+        <a
+          href={client.website}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1 text-primary hover:underline"
+        >
+          Client website <ExternalLink className="size-3" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
-  const pendingReviews = revisions.filter((r) => r.status === "pending" || r.status === "needs-revision");
-  const nextStage = workflowStages.find((s) => s.status === "active");
+  const totalMonthlyRetainer = clientAccounts.reduce((sum, client) => sum + client.monthlyRetainer, 0);
+  const activeClients = clientAccounts.filter((client) => client.projectStatus === "On-going").length;
+  const adsOrdered = clientAccounts.reduce((sum, client) => sum + client.adCount, 0);
+  const reviewCount = clientAccounts.filter((client) => client.projectStatus === "Under Review").length;
 
   return (
     <>
       <PageHeader
-        eyebrow="Overview"
-        title="Creative Dashboard"
-        description="Track every project from brand inputs through to approved, production-ready creative."
+        eyebrow="Client Operations"
+        title="Client Dashboard"
+        description="Manage clients, subscriptions, payments, ad orders, project status, and handoff links from one working view."
         actions={
           <Button asChild>
-            <Link to="/setup">New project</Link>
+            <Link to="/setup">
+              New client <ArrowRight className="size-4" />
+            </Link>
           </Button>
         }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active concepts" value={concepts.length} icon={Lightbulb} hint="2 with product · 2 without" />
-        <StatCard label="Inspiration saved" value={inspiration.length} icon={Images} hint="across 4 formats" />
-        <StatCard label="Awaiting review" value={pendingReviews.length} icon={CheckSquare} hint="needs your attention" />
-        <StatCard label="Projects" value={projects.length} icon={Layers} hint="1 active" />
+        <StatCard label="Clients" value={clientAccounts.length} icon={UsersRound} hint={`${activeClients} on-going`} />
+        <StatCard
+          label="Monthly retainers"
+          value={currencyFormatter.format(totalMonthlyRetainer)}
+          icon={CircleDollarSign}
+          hint="tracked by tier"
+        />
+        <StatCard label="Ads ordered" value={adsOrdered} icon={PackageCheck} hint="Silver, Gold, Platinum" />
+        <StatCard label="Under review" value={reviewCount} icon={PauseCircle} hint="needs approval" />
       </div>
 
       <Card className="mt-6">
-        <CardHeader className="gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <CardTitle className="text-base">{currentProject.name}</CardTitle>
-            <p className="mt-1 text-sm text-muted-foreground">{currentProject.objective}</p>
-          </div>
-          <Badge variant="success">{currentProject.status}</Badge>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        <CardHeader className="gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <div className="mb-2 flex items-center justify-between text-sm">
-              <span className="font-medium">Pipeline progress</span>
-              <span className="text-muted-foreground">{currentProject.progress}%</span>
-            </div>
-            <Progress value={currentProject.progress} />
+            <CardTitle className="text-base">Client list</CardTitle>
+            <p className="mt-1 text-sm text-muted-foreground">Name, contact person, website, product, and current project controls.</p>
           </div>
-          <WorkflowProgress stages={workflowStages} />
-          {nextStage && (
-            <div className="flex flex-col gap-3 rounded-lg bg-accent px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-2 text-sm text-accent-foreground">
-                <Clock className="size-4" />
-                <span>
-                  Next up: <span className="font-semibold">{nextStage.label}</span>
-                </span>
-              </div>
-              <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
-                <Link to="/inspiration">
-                  Continue <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-            </div>
-          )}
+          <Badge variant="accent">{clientAccounts.length} clients</Badge>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[980px] text-left text-sm">
+              <thead className="border-b text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="pb-3 pr-4 font-semibold">Client</th>
+                  <th className="pb-3 pr-4 font-semibold">Subscription tier</th>
+                  <th className="pb-3 pr-4 font-semibold">Payment</th>
+                  <th className="pb-3 pr-4 font-semibold">Ads order</th>
+                  <th className="pb-3 pr-4 font-semibold">Project status</th>
+                  <th className="pb-3 pr-4 font-semibold">Handoff</th>
+                  <th className="pb-3 text-right font-semibold">Dashboard</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {clientAccounts.map((client) => (
+                  <tr key={client.id} className="align-middle">
+                    <td className="py-4 pr-4">
+                      <ClientIdentity client={client} />
+                    </td>
+                    <td className="py-4 pr-4">
+                      <p className="font-medium">{client.subscriptionTier}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {currencyFormatter.format(client.monthlyRetainer)} ({client.subscriptionLabel})
+                      </p>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <Badge variant={paymentVariant(client.paymentStatus)}>{client.paymentStatus}</Badge>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <p className="font-medium">{client.adsOrder}</p>
+                      <p className="text-xs text-muted-foreground">{client.adCount} Ads</p>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <Badge variant={projectVariant(client.projectStatus)}>{client.projectStatus}</Badge>
+                      <p className="mt-1 text-xs text-muted-foreground">Updated {formatDate(client.updatedAt)}</p>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={client.adsFolderUrl} target="_blank" rel="noreferrer">
+                          <FolderOpen className="size-4" />
+                          Ads folder
+                        </a>
+                      </Button>
+                    </td>
+                    <td className="py-4 text-right">
+                      <Button size="sm" asChild>
+                        <Link to={client.projectDashboardPath}>
+                          <LayoutDashboard className="size-4" />
+                          Open
+                        </Link>
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </CardContent>
       </Card>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Needs your review</CardTitle>
+            <CardTitle className="text-base">Subscription tiers</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {pendingReviews.map((r) => (
-              <div key={r.id} className="flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium">{r.asset}</p>
-                  <p className="text-xs text-muted-foreground">{r.reviewer} · Round {r.round}</p>
+            {subscriptionTierOptions.map((option) => (
+              <div key={option.tier} className="flex items-center justify-between rounded-lg border p-3">
+                <div>
+                  <p className="text-sm font-medium">{option.tier}</p>
+                  <p className="text-xs text-muted-foreground">{option.label}</p>
                 </div>
-                <StatusBadge status={r.status} />
+                <Badge variant={option.price === 0 ? "secondary" : "accent"}>
+                  {currencyFormatter.format(option.price)}
+                </Badge>
               </div>
             ))}
-            <Button variant="ghost" className="w-full" asChild>
-              <Link to="/revisions">
-                View all revisions <ArrowRight className="size-4" />
-              </Link>
-            </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">All projects</CardTitle>
+            <CardTitle className="text-base">Ad order reference</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {projects.map((p) => (
-              <div key={p.id} className="rounded-lg border p-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm font-medium">{p.name}</p>
-                  <Badge
-                    variant={p.status === "Active" ? "success" : p.status === "Draft" ? "secondary" : "outline"}
-                  >
-                    {p.status}
-                  </Badge>
+          <CardContent className="grid gap-3 sm:grid-cols-3">
+            {adsOrderOptions.map((option) => {
+              const isPlatinum = option.tier === "Platinum";
+              return (
+                <div
+                  key={option.tier}
+                  className={cn(
+                    "rounded-lg border p-4",
+                    isPlatinum && "border-primary/40 bg-accent/60"
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-semibold">{option.tier}</p>
+                    {isPlatinum && <CheckCircle2 className="size-4 text-primary" />}
+                  </div>
+                  <p className="mt-2 text-2xl font-bold">{option.count}</p>
+                  <p className="text-xs text-muted-foreground">Ads</p>
                 </div>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  {p.client} · Updated {formatDate(p.updatedAt)}
-                </p>
-                <Progress value={p.progress} className="mt-2" indicatorClassName={cn(p.progress === 100 && "bg-success")} />
-              </div>
-            ))}
+              );
+            })}
           </CardContent>
         </Card>
       </div>

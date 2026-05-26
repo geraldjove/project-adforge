@@ -106,7 +106,178 @@ export interface Revision {
   updatedAt: string;
 }
 
+export type SubscriptionTier = "Consistent Flow" | "Scale" | "Scale+" | "Commission Only";
+export type PaymentStatus = "On-going" | "Paid" | "Cancelled" | "Not Paid";
+export type AdsOrder = "Silver" | "Gold" | "Platinum";
+export type ClientProjectStatus = "On-going" | "Cancelled" | "Under Review" | "Completed" | "Frozen";
+
+export const subscriptionTierOptions = [
+  { tier: "Consistent Flow", price: 2500, label: "Silver / Pro" },
+  { tier: "Scale", price: 4000, label: "Gold / Platinum" },
+  { tier: "Scale+", price: 6000, label: "Platinum+" },
+  { tier: "Commission Only", price: 0, label: "Bronze" },
+] as const;
+
+export const paymentStatusOptions: PaymentStatus[] = ["On-going", "Paid", "Cancelled", "Not Paid"];
+
+export const adsOrderOptions = [
+  { tier: "Silver", count: 48 },
+  { tier: "Gold", count: 96 },
+  { tier: "Platinum", count: 160 },
+] as const;
+
+export const projectStatusOptions: ClientProjectStatus[] = [
+  "On-going",
+  "Cancelled",
+  "Under Review",
+  "Completed",
+  "Frozen",
+];
+
+export interface ClientAccount {
+  id: string;
+  clientName: string;
+  contactPerson: string;
+  website: string;
+  product: string;
+  subscriptionTier: SubscriptionTier;
+  monthlyRetainer: number;
+  subscriptionLabel: string;
+  paymentStatus: PaymentStatus;
+  adsOrder: AdsOrder;
+  adCount: number;
+  projectStatus: ClientProjectStatus;
+  adsFolderUrl: string;
+  projectDashboardPath: string;
+  updatedAt: string;
+}
+
+export interface ProductReferenceImage {
+  id: string;
+  clientId: string;
+  productName: string;
+  label: string;
+  type: "Hero product" | "Packaging" | "In-use" | "Texture";
+  imageColor: string;
+  fileName: string;
+  note: string;
+}
+
 // ---------------------------------------------------------------------------
+
+export const clientAccounts: ClientAccount[] = [
+  {
+    id: "client-001",
+    clientName: "Acme Hydration",
+    contactPerson: "Maya Flores",
+    website: "https://acmehydration.example",
+    product: "HydraGlow Electrolyte Drink",
+    subscriptionTier: "Scale",
+    monthlyRetainer: 4000,
+    subscriptionLabel: "Gold / Platinum",
+    paymentStatus: "On-going",
+    adsOrder: "Gold",
+    adCount: 96,
+    projectStatus: "On-going",
+    adsFolderUrl: "https://drive.google.com",
+    projectDashboardPath: "/clients/client-001",
+    updatedAt: "2026-05-24T08:00:00Z",
+  },
+  {
+    id: "client-002",
+    clientName: "Northwind Coffee",
+    contactPerson: "Jon Bell",
+    website: "https://northwindcoffee.example",
+    product: "Cold Brew Subscription",
+    subscriptionTier: "Consistent Flow",
+    monthlyRetainer: 2500,
+    subscriptionLabel: "Silver / Pro",
+    paymentStatus: "Paid",
+    adsOrder: "Silver",
+    adCount: 48,
+    projectStatus: "Under Review",
+    adsFolderUrl: "https://drive.google.com",
+    projectDashboardPath: "/clients/client-002",
+    updatedAt: "2026-05-22T16:05:00Z",
+  },
+  {
+    id: "client-003",
+    clientName: "Luma Home",
+    contactPerson: "Priya Shah",
+    website: "https://lumahome.example",
+    product: "Smart Ambient Lamp",
+    subscriptionTier: "Scale+",
+    monthlyRetainer: 6000,
+    subscriptionLabel: "Platinum+",
+    paymentStatus: "Not Paid",
+    adsOrder: "Platinum",
+    adCount: 160,
+    projectStatus: "Frozen",
+    adsFolderUrl: "https://drive.google.com",
+    projectDashboardPath: "/clients/client-003",
+    updatedAt: "2026-05-19T14:30:00Z",
+  },
+  {
+    id: "client-004",
+    clientName: "BrightPath Fitness",
+    contactPerson: "Elena Cruz",
+    website: "https://brightpathfitness.example",
+    product: "Hybrid Coaching Program",
+    subscriptionTier: "Commission Only",
+    monthlyRetainer: 0,
+    subscriptionLabel: "Bronze",
+    paymentStatus: "Cancelled",
+    adsOrder: "Silver",
+    adCount: 48,
+    projectStatus: "Cancelled",
+    adsFolderUrl: "https://drive.google.com",
+    projectDashboardPath: "/clients/client-004",
+    updatedAt: "2026-05-11T09:15:00Z",
+  },
+];
+
+export const productReferenceImages: ProductReferenceImage[] = [
+  {
+    id: "pri-001",
+    clientId: "client-001",
+    productName: "HydraGlow Electrolyte Drink",
+    label: "Can hero front",
+    type: "Hero product",
+    imageColor: "from-cyan-200 via-sky-100 to-amber-100",
+    fileName: "hydrglow-can-front.png",
+    note: "Use as the primary packshot reference for product-visible ads.",
+  },
+  {
+    id: "pri-002",
+    clientId: "client-001",
+    productName: "HydraGlow Electrolyte Drink",
+    label: "Can in hand",
+    type: "In-use",
+    imageColor: "from-rose-200 via-orange-100 to-lime-100",
+    fileName: "hydrglow-can-in-hand.jpg",
+    note: "Good reference for lifestyle scenes with natural hand placement.",
+  },
+  {
+    id: "pri-003",
+    clientId: "client-002",
+    productName: "Cold Brew Subscription",
+    label: "Bottle lineup",
+    type: "Packaging",
+    imageColor: "from-stone-300 via-amber-100 to-white",
+    fileName: "northwind-cold-brew-lineup.png",
+    note: "Shows label hierarchy, bottle shape, and flavor set.",
+  },
+  {
+    id: "pri-004",
+    clientId: "client-003",
+    productName: "Smart Ambient Lamp",
+    label: "Lamp glow angle",
+    type: "Hero product",
+    imageColor: "from-indigo-200 via-violet-100 to-yellow-100",
+    fileName: "luma-lamp-glow-angle.png",
+    note: "Use for material finish, light spread, and silhouette accuracy.",
+  },
+];
 
 export const currentProject: Project = {
   id: "p-001",

@@ -3,11 +3,11 @@ import {
   FolderPlus,
   Building2,
   Map,
+  ShieldCheck,
+  Target,
   Lightbulb,
-  Images,
-  Wand2,
-  PenTool,
-  CheckSquare,
+  PackagePlus,
+  UserRoundCog,
   type LucideIcon,
 } from "lucide-react";
 
@@ -16,17 +16,17 @@ export interface NavItem {
   to: string;
   icon: LucideIcon;
   step?: number;
-  group: "Overview" | "Creative Pipeline";
+  group: "Overview" | "Client Project Dashboard";
 }
 
 export const navItems: NavItem[] = [
   { label: "Dashboard", to: "/", icon: LayoutDashboard, group: "Overview" },
-  { label: "Project Setup", to: "/setup", icon: FolderPlus, group: "Overview" },
-  { label: "Brand Inputs", to: "/brand", icon: Building2, step: 1, group: "Creative Pipeline" },
-  { label: "Messaging Map", to: "/messaging", icon: Map, step: 2, group: "Creative Pipeline" },
-  { label: "Concepts & Headlines", to: "/concepts", icon: Lightbulb, step: 3, group: "Creative Pipeline" },
-  { label: "Ads Inspiration", to: "/inspiration", icon: Images, step: 4, group: "Creative Pipeline" },
-  { label: "Image Prompts", to: "/prompts", icon: Wand2, step: 5, group: "Creative Pipeline" },
-  { label: "Figma Briefs", to: "/briefs", icon: PenTool, step: 6, group: "Creative Pipeline" },
-  { label: "Human Revisions", to: "/revisions", icon: CheckSquare, step: 7, group: "Creative Pipeline" },
+  { label: "New Client", to: "/setup", icon: FolderPlus, group: "Overview" },
+  { label: "Client Overview", to: "/clients/client-001#overview", icon: UserRoundCog, step: 1, group: "Client Project Dashboard" },
+  { label: "Brand Inputs", to: "/clients/client-001#brand-inputs", icon: Building2, step: 2, group: "Client Project Dashboard" },
+  { label: "Products", to: "/clients/client-001#products", icon: PackagePlus, step: 3, group: "Client Project Dashboard" },
+  { label: "Audience & Market", to: "/clients/client-001#audience-market", icon: Target, step: 4, group: "Client Project Dashboard" },
+  { label: "Benefits & Guardrails", to: "/clients/client-001#benefits-guardrails", icon: ShieldCheck, step: 5, group: "Client Project Dashboard" },
+  { label: "Messaging Map", to: "/clients/client-001#messaging-map", icon: Map, step: 6, group: "Client Project Dashboard" },
+  { label: "Ad Concept Generator", to: "/concepts?client=client-001", icon: Lightbulb, step: 7, group: "Client Project Dashboard" },
 ];

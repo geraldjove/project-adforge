@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Search, Bell, Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,18 +21,20 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </Button>
       <div className="min-w-0 flex-1 sm:flex-none">
         <p className="text-sm font-bold leading-tight text-foreground sm:hidden">AdForge</p>
-        <p className="text-xs text-muted-foreground sm:hidden">Creative Pipeline</p>
+        <p className="text-xs text-muted-foreground sm:hidden">Client Projects</p>
       </div>
       <div className="relative order-3 w-full sm:order-none sm:max-w-sm">
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Search concepts, briefs, assets..." className="pl-9" />
+        <Input placeholder="Search clients, payments, ad orders..." className="pl-9" />
       </div>
       <div className="ml-auto flex items-center gap-2">
         <Button variant="ghost" size="icon" aria-label="Notifications">
           <Bell className="size-4" />
         </Button>
-        <Button className="hidden sm:inline-flex">
-          <Plus className="size-4" /> New concept
+        <Button className="hidden sm:inline-flex" asChild>
+          <Link to="/setup">
+            <Plus className="size-4" /> New client
+          </Link>
         </Button>
         <div className="ml-1 flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
           GK

@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import Dashboard from "@/pages/Dashboard";
+import ClientProjectDashboard from "@/pages/ClientProjectDashboard";
 import ProjectSetup from "@/pages/ProjectSetup";
 import BrandInputs from "@/pages/BrandInputs";
 import MessagingMap from "@/pages/MessagingMap";
@@ -15,6 +16,7 @@ export default function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/clients/:clientId" element={<ClientProjectDashboard />} />
         <Route path="/setup" element={<ProjectSetup />} />
         <Route path="/brand" element={<BrandInputs />} />
         <Route path="/messaging" element={<MessagingMap />} />
