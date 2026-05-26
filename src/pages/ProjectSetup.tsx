@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   adsOrderOptions,
   paymentStatusOptions,
+  productCategoryOptions,
   projectStatusOptions,
   subscriptionTierOptions,
 } from "@/data/mockData";
@@ -47,6 +48,14 @@ export default function ProjectSetup() {
               <div className="space-y-1.5">
                 <Label htmlFor="client-product">Client product</Label>
                 <Input id="client-product" placeholder="Product or offer name" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="product-category">Category</Label>
+                <Select id="product-category" defaultValue="Functional beverage">
+                  {productCategoryOptions.map((category) => (
+                    <option key={category}>{category}</option>
+                  ))}
+                </Select>
               </div>
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="client-notes">Client notes</Label>

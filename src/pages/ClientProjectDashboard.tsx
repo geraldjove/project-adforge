@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import {
+  Bot,
   ArrowRight,
   ExternalLink,
   FolderOpen,
@@ -20,10 +21,13 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   adsOrderOptions,
+  audienceInsights,
   brandInputs,
   clientAccounts,
-  messagingMap,
+  competitorInsights,
+  generatedMessagingPillars,
   paymentStatusOptions,
+  productCategoryOptions,
   projectStatusOptions,
   productReferenceImages,
   subscriptionTierOptions,
@@ -48,15 +52,29 @@ function TagList({ items }: { items: string[] }) {
   );
 }
 
+function buildMessagingPrompt(brandName: string, brandWebsite: string) {
+  return `Brand Name: ${brandName}\nBrand Website: ${brandWebsite}\nUse public brand facts, audience voice, and competitive intelligence to produce a Brand Context Document and 8 creative pillars. Headlines: 25-40 characters. Tone: credible, performance-led, not corny.`;
+}
+
 export default function ClientProjectDashboard() {
   const { clientId } = useParams();
   const { hash } = useLocation();
   const client = getClient(clientId);
   const productImages = productReferenceImages.filter((image) => image.clientId === client.id);
+  const generatedPrompt = buildMessagingPrompt(brandInputs.brandName, client.website);
 
   useEffect(() => {
     if (!hash) return;
-    document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const target = document.querySelector(hash);
+    const scrollPanel = target?.closest("main");
+    if (!target || !(scrollPanel instanceof HTMLElement)) return;
+
+    const panelTop = scrollPanel.getBoundingClientRect().top;
+    const targetTop = target.getBoundingClientRect().top;
+    scrollPanel.scrollTo({
+      top: scrollPanel.scrollTop + targetTop - panelTop - 24,
+      behavior: "smooth",
+    });
   }, [hash]);
 
   return (
@@ -181,7 +199,11 @@ export default function ClientProjectDashboard() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Category</Label>
-                  <Input defaultValue={brandInputs.category} />
+                  <Select defaultValue={brandInputs.category}>
+                    {productCategoryOptions.map((category) => (
+                      <option key={category}>{category}</option>
+                    ))}
+                  </Select>
                 </div>
                 <div className="space-y-1.5 lg:col-span-2">
                   <Label>Description</Label>
@@ -238,15 +260,49 @@ export default function ClientProjectDashboard() {
         </section>
 
         <section id="audience-market" className="scroll-mt-24">
-          <SectionCard title="Audience & Market" description="Who this project targets and which competitors frame the market.">
-            <div className="grid gap-4 lg:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label>Target audience</Label>
-                <Textarea defaultValue={brandInputs.targetAudience} />
+          <SectionCard title="Audience & Market" description="Generated from the public-source brand research prompt.">
+            <div className="space-y-5">
+              <div className="grid gap-3 lg:grid-cols-3">
+                {audienceInsights.map((insight) => (
+                  <div key={insight.id} className="rounded-lg border p-4">
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <p className="font-semibold">{insight.segment}</p>
+                      <Badge variant="accent">{insight.trigger}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{insight.desire}</p>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Pain point: {insight.painPoint}
+                    </p>
+                    <div className="mt-3 rounded-md bg-muted/50 p-2 text-xs italic">
+                      "{insight.voiceOfCustomer}"
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="space-y-1.5">
-                <Label>Competitors</Label>
-                <Textarea defaultValue={brandInputs.competitors} />
+
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[840px] text-left text-sm">
+                  <thead className="border-b text-xs uppercase text-muted-foreground">
+                    <tr>
+                      <th className="pb-3 pr-4 font-semibold">Competitor</th>
+                      <th className="pb-3 pr-4 font-semibold">Positioning</th>
+                      <th className="pb-3 pr-4 font-semibold">Emotional hook</th>
+                      <th className="pb-3 pr-4 font-semibold">Observed claim</th>
+                      <th className="pb-3 font-semibold">Opportunity</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {competitorInsights.map((competitor) => (
+                      <tr key={competitor.id}>
+                        <td className="py-3 pr-4 font-medium">{competitor.competitor}</td>
+                        <td className="py-3 pr-4 text-muted-foreground">{competitor.positioning}</td>
+                        <td className="py-3 pr-4">{competitor.emotionalHook}</td>
+                        <td className="py-3 pr-4 text-muted-foreground">{competitor.observedClaim}</td>
+                        <td className="py-3 text-muted-foreground">{competitor.opportunity}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </SectionCard>
@@ -268,17 +324,59 @@ export default function ClientProjectDashboard() {
         </section>
 
         <section id="messaging-map" className="scroll-mt-24">
-          <SectionCard title="Messaging Map" description="Messaging pillars that translate client inputs into ad-ready angles.">
-            <div className="grid gap-4 lg:grid-cols-3">
-              {messagingMap.map((pillar) => (
+          <SectionCard title="Messaging Map" description="ChatGPT-generated strategic pillars from brand facts, audience voice, and competitor research.">
+            <div className="mb-5 grid gap-4 lg:grid-cols-[1fr_auto]">
+              <div className="rounded-lg bg-muted/50 p-4">
+                <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                  <Bot className="size-4 text-primary" />
+                  Internal prompt variables
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Brand Name: <span className="font-medium text-foreground">{brandInputs.brandName}</span>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Brand Website: <span className="font-medium text-foreground">{client.website}</span>
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">{generatedPrompt}</p>
+              </div>
+              <div className="flex items-start">
+                <Button>
+                  <Bot className="size-4" />
+                  Generate messaging map
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              {generatedMessagingPillars.map((pillar) => (
                 <div key={pillar.id} className="rounded-lg border p-4">
-                  <div className="mb-3 flex items-center justify-between gap-2">
-                    <p className="font-semibold">{pillar.pillar}</p>
-                    <Badge variant="accent">{pillar.emotion}</Badge>
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="font-semibold">{pillar.pillar}</p>
+                      <p className="text-xs text-muted-foreground">{pillar.sentiment}</p>
+                    </div>
+                    <Badge variant={pillar.mode === "Stable" ? "success" : "accent"}>{pillar.mode}</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{pillar.promise}</p>
-                  <div className="mt-3">
-                    <TagList items={pillar.proofPoints} />
+                  <p className="text-sm text-muted-foreground">{pillar.summary}</p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Customer phrases</p>
+                      <TagList items={pillar.evidencePhrases} />
+                    </div>
+                    <div>
+                      <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Callouts</p>
+                      <TagList items={pillar.callouts} />
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-md bg-accent/40 p-3">
+                    <p className="mb-1 text-xs font-semibold uppercase text-accent-foreground">Seed headlines</p>
+                    <div className="flex flex-wrap gap-2">
+                      {pillar.headlineSeeds.map((headline) => (
+                        <Badge key={headline} variant="outline">
+                          {headline}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}

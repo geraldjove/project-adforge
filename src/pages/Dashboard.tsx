@@ -70,13 +70,14 @@ export default function Dashboard() {
   const totalMonthlyRetainer = clientAccounts.reduce((sum, client) => sum + client.monthlyRetainer, 0);
   const activeClients = clientAccounts.filter((client) => client.projectStatus === "On-going").length;
   const adsOrdered = clientAccounts.reduce((sum, client) => sum + client.adCount, 0);
+  const adsFulfilled = clientAccounts.reduce((sum, client) => sum + client.fulfilledAdCount, 0);
   const reviewCount = clientAccounts.filter((client) => client.projectStatus === "Under Review").length;
 
   return (
     <>
       <PageHeader
         eyebrow="Client Operations"
-        title="Client Dashboard"
+        title="Admin Dashboard"
         description="Manage clients, subscriptions, payments, ad orders, project status, and handoff links from one working view."
         actions={
           <Button asChild>
@@ -95,7 +96,7 @@ export default function Dashboard() {
           icon={CircleDollarSign}
           hint="tracked by tier"
         />
-        <StatCard label="Ads ordered" value={adsOrdered} icon={PackageCheck} hint="Silver, Gold, Platinum" />
+        <StatCard label="Ads fulfilled" value={`${adsFulfilled}/${adsOrdered}`} icon={PackageCheck} hint="fulfilled / total ads" />
         <StatCard label="Under review" value={reviewCount} icon={PauseCircle} hint="needs approval" />
       </div>
 
@@ -116,6 +117,7 @@ export default function Dashboard() {
                   <th className="pb-3 pr-4 font-semibold">Subscription tier</th>
                   <th className="pb-3 pr-4 font-semibold">Payment</th>
                   <th className="pb-3 pr-4 font-semibold">Ads order</th>
+                  <th className="pb-3 pr-4 font-semibold">Fulfillment</th>
                   <th className="pb-3 pr-4 font-semibold">Project status</th>
                   <th className="pb-3 pr-4 font-semibold">Handoff</th>
                   <th className="pb-3 text-right font-semibold">Dashboard</th>
@@ -139,6 +141,14 @@ export default function Dashboard() {
                     <td className="py-4 pr-4">
                       <p className="font-medium">{client.adsOrder}</p>
                       <p className="text-xs text-muted-foreground">{client.adCount} Ads</p>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <p className="font-medium">
+                        {client.fulfilledAdCount}/{client.adCount}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {client.adCount - client.fulfilledAdCount} left to fulfill
+                      </p>
                     </td>
                     <td className="py-4 pr-4">
                       <Badge variant={projectVariant(client.projectStatus)}>{client.projectStatus}</Badge>

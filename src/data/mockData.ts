@@ -49,6 +49,35 @@ export interface MessagingPillar {
   emotion: string;
 }
 
+export interface GeneratedMessagingPillar {
+  id: string;
+  mode: "Stable" | "Experimental";
+  pillar: string;
+  sentiment: string;
+  summary: string;
+  evidencePhrases: string[];
+  headlineSeeds: string[];
+  callouts: string[];
+}
+
+export interface CompetitorInsight {
+  id: string;
+  competitor: string;
+  positioning: string;
+  emotionalHook: string;
+  observedClaim: string;
+  opportunity: string;
+}
+
+export interface AudienceInsight {
+  id: string;
+  segment: string;
+  desire: string;
+  painPoint: string;
+  trigger: string;
+  voiceOfCustomer: string;
+}
+
 export interface Concept {
   id: string;
   title: string;
@@ -134,6 +163,18 @@ export const projectStatusOptions: ClientProjectStatus[] = [
   "Frozen",
 ];
 
+export const productCategoryOptions = [
+  "Functional beverage",
+  "Coffee & tea",
+  "Home goods",
+  "Fitness coaching",
+  "Beauty & personal care",
+  "Supplements",
+  "Apparel",
+  "Consumer electronics",
+  "Other",
+];
+
 export interface ClientAccount {
   id: string;
   clientName: string;
@@ -146,6 +187,7 @@ export interface ClientAccount {
   paymentStatus: PaymentStatus;
   adsOrder: AdsOrder;
   adCount: number;
+  fulfilledAdCount: number;
   projectStatus: ClientProjectStatus;
   adsFolderUrl: string;
   projectDashboardPath: string;
@@ -178,6 +220,7 @@ export const clientAccounts: ClientAccount[] = [
     paymentStatus: "On-going",
     adsOrder: "Gold",
     adCount: 96,
+    fulfilledAdCount: 38,
     projectStatus: "On-going",
     adsFolderUrl: "https://drive.google.com",
     projectDashboardPath: "/clients/client-001",
@@ -195,6 +238,7 @@ export const clientAccounts: ClientAccount[] = [
     paymentStatus: "Paid",
     adsOrder: "Silver",
     adCount: 48,
+    fulfilledAdCount: 19,
     projectStatus: "Under Review",
     adsFolderUrl: "https://drive.google.com",
     projectDashboardPath: "/clients/client-002",
@@ -212,6 +256,7 @@ export const clientAccounts: ClientAccount[] = [
     paymentStatus: "Not Paid",
     adsOrder: "Platinum",
     adCount: 160,
+    fulfilledAdCount: 42,
     projectStatus: "Frozen",
     adsFolderUrl: "https://drive.google.com",
     projectDashboardPath: "/clients/client-003",
@@ -229,6 +274,7 @@ export const clientAccounts: ClientAccount[] = [
     paymentStatus: "Cancelled",
     adsOrder: "Silver",
     adCount: 48,
+    fulfilledAdCount: 12,
     projectStatus: "Cancelled",
     adsFolderUrl: "https://drive.google.com",
     projectDashboardPath: "/clients/client-004",
@@ -370,6 +416,159 @@ export const messagingMap: MessagingPillar[] = [
     promise: "A drink as active as you are.",
     proofPoints: ["Slim recyclable can", "Fits any gym bag", "Resealable on the go"],
     emotion: "Belonging",
+  },
+];
+
+export const competitorInsights: CompetitorInsight[] = [
+  {
+    id: "comp-1",
+    competitor: "Liquid I.V.",
+    positioning: "Fast hydration multiplier for active, busy consumers.",
+    emotionalHook: "Relief and readiness",
+    observedClaim: "Electrolytes plus convenience for daily hydration.",
+    opportunity: "Differentiate with lighter sugar, beauty-adjacent benefits, and a more design-led ritual.",
+  },
+  {
+    id: "comp-2",
+    competitor: "LMNT",
+    positioning: "High-sodium performance hydration for serious training.",
+    emotionalHook: "Competence and discipline",
+    observedClaim: "No sugar, strong electrolyte replenishment.",
+    opportunity: "Own a softer everyday performance lane without sounding clinical.",
+  },
+  {
+    id: "comp-3",
+    competitor: "Gatorade Fit",
+    positioning: "Mainstream fitness hydration with cleaner credentials.",
+    emotionalHook: "Familiar trust",
+    observedClaim: "Real hydration benefits from a known sports brand.",
+    opportunity: "Use sharper lifestyle language and premium visual identity to avoid commodity sports-drink cues.",
+  },
+  {
+    id: "comp-4",
+    competitor: "Recess",
+    positioning: "Mood-led beverage for calm, style, and daily decompression.",
+    emotionalHook: "Identity and vibe",
+    observedClaim: "A drink that fits a modern wellness lifestyle.",
+    opportunity: "Borrow the ritual feel while staying grounded in hydration and product facts.",
+  },
+];
+
+export const audienceInsights: AudienceInsight[] = [
+  {
+    id: "aud-1",
+    segment: "Active millennials",
+    desire: "A clean daily drink that feels healthier without becoming a chore.",
+    painPoint: "Skeptical of sugar-heavy sports drinks and vague wellness claims.",
+    trigger: "Relief",
+    voiceOfCustomer: "I want something that works, but I do not want it to feel like a gym supplement.",
+  },
+  {
+    id: "aud-2",
+    segment: "Fitness-curious professionals",
+    desire: "Hydration that fits work, workouts, errands, and social routines.",
+    painPoint: "Forgetfulness, afternoon crashes, and products that look too clinical.",
+    trigger: "Autonomy",
+    voiceOfCustomer: "I need the easy version of taking care of myself.",
+  },
+  {
+    id: "aud-3",
+    segment: "Design-led wellness shoppers",
+    desire: "A functional product they are proud to carry and show.",
+    painPoint: "Wellness products that feel generic, loud, or medicinal.",
+    trigger: "Status",
+    voiceOfCustomer: "If it is sitting on my desk, I want it to look intentional.",
+  },
+];
+
+export const generatedMessagingPillars: GeneratedMessagingPillar[] = [
+  {
+    id: "gmp-1",
+    mode: "Stable",
+    pillar: "Clean Hydration, No Crash",
+    sentiment: "Trust",
+    summary:
+      "Lead with the practical, defensible promise: hydration support without the sugar-heavy sports drink baggage. This pillar should stay close to product facts and repeatable proof points.",
+    evidencePhrases: ["works without the crash", "not a sugary sports drink", "easy daily hydration"],
+    headlineSeeds: ["Hydration Without The Crash", "Clean Energy, Easy Hydration"],
+    callouts: ["5g sugar", "5 essential electrolytes", "No artificial colors"],
+  },
+  {
+    id: "gmp-2",
+    mode: "Stable",
+    pillar: "Glow From Daily Ritual",
+    sentiment: "Aspiration",
+    summary:
+      "Frame HydraGlow as a small daily ritual that makes wellness feel visible and repeatable. Keep claims grounded in the stated vitamin and hydration benefits.",
+    evidencePhrases: ["glow from within", "a better daily habit", "hydration I can keep up with"],
+    headlineSeeds: ["Your Daily Glow Ritual", "Hydration That Shows Up"],
+    callouts: ["Added biotin", "Vitamin C", "Sparkling hydration"],
+  },
+  {
+    id: "gmp-3",
+    mode: "Stable",
+    pillar: "Designed To Move",
+    sentiment: "Autonomy",
+    summary:
+      "Position the product as portable hydration for people moving between workouts, commutes, and busy schedules. The creative should make the product feel effortless rather than intense.",
+    evidencePhrases: ["fits my day", "grab and go", "not just for athletes"],
+    headlineSeeds: ["Made For Days In Motion", "Hydration That Keeps Up"],
+    callouts: ["Slim can", "Gym-bag ready", "Daily routine friendly"],
+  },
+  {
+    id: "gmp-4",
+    mode: "Stable",
+    pillar: "Ingredient Confidence",
+    sentiment: "Relief",
+    summary:
+      "Give skeptical buyers clear reasons to trust the product. This pillar is strongest when ads make the ingredient story scannable and transparent.",
+    evidencePhrases: ["what is actually in it", "no weird colors", "cleaner option"],
+    headlineSeeds: ["Know What You Sip", "Hydration With Receipts"],
+    callouts: ["Clear formula", "Low sugar", "No artificial colors"],
+  },
+  {
+    id: "gmp-5",
+    mode: "Experimental",
+    pillar: "Desk Status Hydration",
+    sentiment: "Status",
+    summary:
+      "Explore the product as a visible identity signal for people who curate their workday and wellness routines. This can stretch the brand into style-led, office-friendly creative.",
+    evidencePhrases: ["looks good on my desk", "wellness but make it normal", "intentional routine"],
+    headlineSeeds: ["Your Desk Drink Upgrade", "Hydration With Taste"],
+    callouts: ["Design-led can", "Workday friendly", "Clean sparkle"],
+  },
+  {
+    id: "gmp-6",
+    mode: "Experimental",
+    pillar: "Soft Performance",
+    sentiment: "Belonging",
+    summary:
+      "Challenge hardcore sports-drink language with a gentler performance identity. This pillar speaks to people who move, sweat, and recover without wanting a supplement persona.",
+    evidencePhrases: ["not a gym bro drink", "for normal workouts", "still want it to work"],
+    headlineSeeds: ["Performance, Softened", "For The Casual Athlete"],
+    callouts: ["Workout ready", "Everyday electrolytes", "Light sugar"],
+  },
+  {
+    id: "gmp-7",
+    mode: "Experimental",
+    pillar: "Anti-Boring Water",
+    sentiment: "Rebellion",
+    summary:
+      "Use playful tension against plain water fatigue while staying credible. This angle can unlock punchier headlines without inventing product claims.",
+    evidencePhrases: ["water gets boring", "need flavor to drink enough", "something I actually finish"],
+    headlineSeeds: ["Bored Of Plain Water?", "Hydration You Finish"],
+    callouts: ["Sparkling taste", "Electrolyte support", "Easy to drink"],
+  },
+  {
+    id: "gmp-8",
+    mode: "Experimental",
+    pillar: "Beauty Meets Utility",
+    sentiment: "Self-expression",
+    summary:
+      "Bridge beauty-coded glow language with functional beverage proof. The work should feel sensorial, but each ad needs a clear product fact to stay credible.",
+    evidencePhrases: ["beauty from the inside", "actually functional", "pretty but useful"],
+    headlineSeeds: ["Pretty Functional Hydration", "Glow Meets Electrolytes"],
+    callouts: ["Biotin + vitamin C", "Functional sparkle", "Hydration support"],
   },
 ];
 

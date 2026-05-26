@@ -16,7 +16,7 @@ export function AppLayout() {
   }, [mobileNavOpen]);
 
   return (
-    <div className="min-h-dvh bg-background lg:flex lg:h-dvh lg:overflow-hidden">
+    <div className="flex h-dvh overflow-hidden bg-background">
       <Sidebar className="hidden lg:flex" />
 
       {mobileNavOpen && (
@@ -42,9 +42,9 @@ export function AppLayout() {
         </div>
       )}
 
-      <div className="flex min-w-0 flex-1 flex-col lg:overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <Topbar onMenuClick={() => setMobileNavOpen(true)} />
-        <main className="flex-1 lg:overflow-y-auto">
+        <main className="flex-1 overflow-y-auto">
           <div className="mx-auto w-full max-w-6xl px-4 py-6 animate-fade-in sm:px-6 sm:py-8">
             <Outlet />
           </div>
