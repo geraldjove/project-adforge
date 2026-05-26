@@ -1,13 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, Bell, Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { setMockRole, useMockAccount } from "@/lib/mockAuth";
 
 interface TopbarProps {
   onMenuClick?: () => void;
 }
 
 export function Topbar({ onMenuClick }: TopbarProps) {
+  const navigate = useNavigate();
+  const account = useMockAccount();
+  const isArtist = account.role === "artist";
+  const searchPlaceholder = isArtist
+    ? "Search jobs, briefs, revisions..."
+    : "Search clients, payments, ad orders...";
+
+  function switchMockAccount() {
+    const nextRole = account.role === "admin" ? "artist" : "admin";
+    setMockRole(nextRole);
+    navigate(nextRole === "admin" ? "/" : "/artist");
+  }
+
   return (
     <header className="sticky top-0 z-10 flex min-h-16 flex-wrap items-center gap-3 border-b bg-background/90 px-4 py-3 backdrop-blur sm:flex-nowrap sm:px-6">
       <Button
@@ -25,20 +39,28 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </div>
       <div className="relative order-3 w-full sm:order-none sm:max-w-sm">
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Search clients, payments, ad orders..." className="pl-9" />
+        <Input placeholder={searchPlaceholder} className="pl-9" />
       </div>
       <div className="ml-auto flex items-center gap-2">
         <Button variant="ghost" size="icon" aria-label="Notifications">
           <Bell className="size-4" />
         </Button>
-        <Button className="hidden sm:inline-flex" asChild>
-          <Link to="/setup">
-            <Plus className="size-4" /> New client
-          </Link>
-        </Button>
-        <div className="ml-1 flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-          GK
-        </div>
+        {!isArtist && (
+          <Button className="hidden sm:inline-flex" asChild>
+            <Link to="/setup">
+              <Plus className="size-4" /> New client
+            </Link>
+          </Button>
+        )}
+        <button
+          type="button"
+          onClick={switchMockAccount}
+          className="ml-1 flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          title={`Logged in as ${account.name}. Click to switch mock account.`}
+          aria-label={`Logged in as ${account.name}. Switch mock account.`}
+        >
+          {account.initials}
+        </button>
       </div>
     </header>
   );

@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
   Bot,
-  ArrowRight,
   ExternalLink,
   FolderOpen,
   ImagePlus,
@@ -384,18 +383,11 @@ export default function ClientProjectDashboard() {
           </SectionCard>
         </section>
 
-        <section id="ad-concept-generator" className="scroll-mt-24 rounded-lg border bg-accent/50 p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-semibold text-accent-foreground">Go to Ad Concept Generator</p>
-              <p className="text-sm text-muted-foreground">Use this client project context to generate campaign concepts and headlines.</p>
-            </div>
-            <Button asChild>
-              <Link to={`/concepts?client=${client.id}`}>
-                Open generator <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-          </div>
+        <section id="artist-production-handoff" className="scroll-mt-24 rounded-lg border bg-accent/50 p-4">
+          <p className="font-semibold text-accent-foreground">Artist production handoff</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Admin manages client context here. Artists use the Ad Concept Generator from their workspace when producing assigned ad tasks.
+          </p>
         </section>
       </div>
     </>

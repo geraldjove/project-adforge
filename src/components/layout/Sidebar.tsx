@@ -1,9 +1,10 @@
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useMockAccount } from "@/lib/mockAuth";
 import { Select } from "@/components/ui/select";
 import { clientAccounts } from "@/data/mockData";
-import { navItems } from "./nav";
+import { navItems, type NavGroup } from "./nav";
 
 interface SidebarProps {
   className?: string;
@@ -11,7 +12,9 @@ interface SidebarProps {
 }
 
 export function Sidebar({ className, onNavigate }: SidebarProps) {
-  const groups = ["Overview", "Client Project Dashboard"] as const;
+  const account = useMockAccount();
+  const groups: NavGroup[] =
+    account.role === "admin" ? ["Admin", "Admin Operations", "Client Project Dashboard"] : ["Artist", "Artist Work"];
   const location = useLocation();
   const navigate = useNavigate();
   const { clientId } = useParams();
@@ -38,7 +41,9 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
         </div>
         <div className="leading-tight">
           <div className="text-sm font-bold text-white">AdForge</div>
-          <div className="text-xs text-sidebar-foreground/60">Client Projects</div>
+          <div className="text-xs text-sidebar-foreground/60">
+            {account.role === "admin" ? "Admin Workspace" : "Artist Workspace"}
+          </div>
         </div>
       </div>
 
@@ -50,7 +55,7 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
             </p>
             <div className="space-y-0.5">
               {navItems
-                .filter((i) => i.group === group)
+                .filter((i) => i.role === account.role && i.group === group)
                 .map((item) => {
                   const itemTo = item.to.replace("/clients/client-001", `/clients/${activeClient.id}`);
                   const clientItemTo = itemTo.replace("client=client-001", `client=${activeClient.id}`);
@@ -93,23 +98,35 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
 
       <div className="border-t border-sidebar-border p-4">
         <div className="rounded-lg bg-white/5 p-3">
-          <label className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-            Active client
-          </label>
-          <Select
-            value={activeClient.id}
-            onChange={(event) => handleClientChange(event.target.value)}
-            className="h-9 border-white/10 bg-white pr-8 text-xs font-medium text-foreground shadow-none focus-visible:ring-sidebar-accent"
-          >
-            {clientAccounts.map((client) => (
-              <option key={client.id} value={client.id}>
-                {client.clientName}
-              </option>
-            ))}
-          </Select>
-          <p className="mt-2 text-[11px] text-sidebar-foreground/60">
-            {activeClient.projectStatus} · {activeClient.subscriptionTier}
-          </p>
+          {account.role === "admin" ? (
+            <>
+              <label className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
+                Active client
+              </label>
+              <Select
+                value={activeClient.id}
+                onChange={(event) => handleClientChange(event.target.value)}
+                className="h-9 border-white/10 bg-white pr-8 text-xs font-medium text-foreground shadow-none focus-visible:ring-sidebar-accent"
+              >
+                {clientAccounts.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.clientName}
+                  </option>
+                ))}
+              </Select>
+              <p className="mt-2 text-[11px] text-sidebar-foreground/60">
+                {activeClient.projectStatus} · {activeClient.subscriptionTier}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
+                Logged in artist
+              </p>
+              <p className="mt-1 text-sm font-semibold text-white">{account.name}</p>
+              <p className="mt-1 text-[11px] text-sidebar-foreground/60">3 assigned tasks · 1 revision</p>
+            </>
+          )}
         </div>
       </div>
     </aside>
